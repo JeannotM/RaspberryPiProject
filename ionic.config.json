@@ -1,0 +1,7 @@
+{
+  "name": "WateringPlant",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
