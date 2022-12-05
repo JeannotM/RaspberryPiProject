@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-tabs',
@@ -7,6 +9,7 @@ import { Component } from '@angular/core';
 })
 export class TabsPage {
 
-  constructor() {}
-
+  constructor(private http: HttpClient) { 
+    http.get(environment.ip + "createdb");
+  }
 }
