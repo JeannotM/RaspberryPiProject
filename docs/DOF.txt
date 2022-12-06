@@ -1,9 +1,0 @@
-Python:
-- Geschreven code moet functioneel en getest zijn voordat ze geüpload mogen worden.
-- Geschreven code moet onderbouwd worden doormiddel van comments als de code te complex is om te begrijpen op zichzelf.
-- De Python code moet geschreven worden volgens de volgende conventies:
-    - Functies, bestandsnamen en variabelen zijn geschreven in snake_case.
-    - Constante variabelen zijn geschreven in SCREAMING_SNAKE_CASE
-    - Classes zijn geschreven in PascalCase.
-
-JavaScript:

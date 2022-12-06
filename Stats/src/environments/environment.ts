@@ -4,7 +4,11 @@
 
 export const environment = {
   production: false,
-  ip: "localhost:3000/"
+  ip: "http://localhost:3000/",
+  api: "http://localhost:3000/api/stats/",
+  waterlevel: "http://localhost:3000/api/stats/waterlevel",
+  groundhumidity: "http://localhost:3000/api/stats/groundhumidity",
+  waterpumped: "http://localhost:3000/api/stats/waterpumped",
 };
 
 /*

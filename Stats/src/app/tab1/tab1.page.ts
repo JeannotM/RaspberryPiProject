@@ -1,5 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Storage } from '@ionic/storage';
 import { Chart, ChartConfiguration } from 'chart.js/auto';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-tab1',
@@ -15,33 +18,10 @@ export class Tab1Page {
     data: {
       datasets: [
         {
-          data: [ 65, 59, 80, 81, 56, 55, 40 ],
-          label: 'Series A',
+          data: [ 0 ],
+          label: 'Water level',
           backgroundColor: 'rgba(148,159,177,0.2)',
           borderColor: 'rgba(148,159,177,1)',
-          pointBackgroundColor: 'rgba(148,159,177,1)',
-          pointBorderColor: '#fff',
-          pointHoverBackgroundColor: '#fff',
-          pointHoverBorderColor: 'rgba(148,159,177,0.8)',
-          fill: 'origin',
-        },
-        {
-          data: [ 28, 48, 40, 19, 86, 27, 90 ],
-          label: 'Series B',
-          backgroundColor: 'rgba(77,83,96,0.2)',
-          borderColor: 'rgba(77,83,96,1)',
-          pointBackgroundColor: 'rgba(77,83,96,1)',
-          pointBorderColor: '#fff',
-          pointHoverBackgroundColor: '#fff',
-          pointHoverBorderColor: 'rgba(77,83,96,1)',
-          fill: 'origin',
-        },
-        {
-          data: [ 180, 480, 770, 90, 1000, 270, 400 ],
-          label: 'Series C',
-          yAxisID: 'y1',
-          backgroundColor: 'rgba(255,0,0,0.3)',
-          borderColor: 'red',
           pointBackgroundColor: 'rgba(148,159,177,1)',
           pointBorderColor: '#fff',
           pointHoverBackgroundColor: '#fff',
@@ -58,8 +38,8 @@ export class Tab1Page {
         y: { position: 'left' },
         y1: {
           position: 'right',
-          grid: { color: 'rgba(255,0,0,0.3)' },
-          ticks: { color: 'red' }
+          grid: { color: 'rgba(255,50,50,0.2)' },
+          ticks: { color: 'rgba(0,0,0,0)' }
         }
       },
   
@@ -67,9 +47,18 @@ export class Tab1Page {
     }
   }
 
+  constructor(private http: HttpClient, private storage: Storage) { console.log(storage.get("asd")) }
+
   ionViewWillEnter() { this.renderChart(); }
   renderChart(): void {
-    if(!this.chart)
-      this.chart = new Chart(this.lineChart.nativeElement, this.chartConfiguration);
+    if(!this.chart) {
+      this.http.get(environment.waterlevel).subscribe((result: any) => {
+        let values = []
+        for(let index in result) values.push(result[index].level)
+
+        this.chartConfiguration.data.datasets[0].data = values;
+        this.chart = new Chart(this.lineChart.nativeElement, this.chartConfiguration);
+      });
+    }
   }
 }
