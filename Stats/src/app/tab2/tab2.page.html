@@ -6,6 +6,12 @@
   </ion-header>
 </ion-content>
 
+<ion-item>
+  <ion-label>Ip Address</ion-label>
+  <ion-input #ipInput></ion-input>
+  <ion-button (click)="setLocalIp()">Commit</ion-button>
+</ion-item>
+
 <ion-grid>
   <ion-row>
     <ion-title offset="2" size="8"><h1>Welcome to Plantify</h1></ion-title>

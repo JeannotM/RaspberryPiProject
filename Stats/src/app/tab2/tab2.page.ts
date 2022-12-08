@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonInput } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 
 @Component({
@@ -8,9 +9,9 @@ import { Storage } from '@ionic/storage';
 })
 export class Tab2Page {
 
+  @ViewChild('ipInput') ipAddress!: IonInput;
   constructor(private storage: Storage) { }
 
-  setLocalIp() {
-    
-  }
+  async ionViewWillEnter() { this.ipAddress.value = await this.storage.get("ip"); }
+  async setLocalIp() { await this.storage.set("ip", this.ipAddress.value); }
 }
