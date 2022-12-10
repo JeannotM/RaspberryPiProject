@@ -10,6 +10,7 @@ import { PlantModalComponent } from '../plant-modal/plant-modal.component';
   styleUrls: ['tab3.page.scss']
 })
 export class Tab3Page {
+  // Overengineering is the only way to live
 
   constructor(private http: HttpClient, private storage: Storage, public modalController: ModalController) { }
 

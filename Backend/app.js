@@ -1,31 +1,9 @@
-// require('dotenv').config();
 const express = require('express');
-// const path = require("path");
-// const mysql = require("mysql");
 const cors = require("cors");
-const sqlite3 = require('sqlite3').verbose();
-
-const limit = 20;
+const db = require("database/database");
 
 // ================================================ CREATION ===========
 const app = express();
-// const db = mysql.createConnection({
-//     host     : "localhost",
-//     user     : "root",
-//     password : "",
-//     database : "stats",
-//     multipleStatements: true
-// });
-
-const db = new sqlite3.Database('database.db', mode=sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE, (err) => {
-    if(err) throw err;
-    console.log("SQLite Connected...");
-});
-
-// db.connect(err => {
-//     if(err) throw err;
-//     console.log("MySQL Connected...");
-// });
 
 app.use((req, res, next) => {
     res.append('Access-Control-Allow-Origin', ['*']);
@@ -41,92 +19,33 @@ app.use((req, res, next) => {
 app.use(express.json()); // adds the json body to the request object
 const corsOptions = {
     origin: '*',
-    methods: 'GET,POST',
+    methods: 'GET,POST,PUT,DELETE',
     credentials: false,
-    allowedHeaders: 'GET,POST',
+    allowedHeaders: 'GET,POST,PUT,DELETE',
     optionsSuccessStatus: 200 // For legacy browser support
 };
 
 app.options('*', cors(corsOptions));
 
 // ================================================ ROUTES =============
+app.use('/api/stats', require('./routes/stats'));
+app.use('/api/plants', require('./routes/plants'));
+
 // https://www.youtube.com/watch?v=EN6Dx22cPRI
 app.get("/createdb", (req, res) => {
-    db.run("CREATE TABLE IF NOT EXISTS `water_level` (id INTEGER PRIMARY KEY AUTOINCREMENT, level INTEGER NOT NULL);");
-    db.run("CREATE TABLE IF NOT EXISTS `ground_humidity` (id INTEGER PRIMARY KEY AUTOINCREMENT, level INTEGER NOT NULL);");
-    db.run("CREATE TABLE IF NOT EXISTS `water_pumped` (id INTEGER PRIMARY KEY AUTOINCREMENT, level INTEGER NOT NULL);");
+    db.run("CREATE TABLE IF NOT EXISTS `water_level` (id INTEGER PRIMARY KEY AUTOINCREMENT, level INTEGER NOT NULL, created_at DEFAULT CURRENT_TIMESTAMP);");
+    db.run("CREATE TABLE IF NOT EXISTS `ground_humidity` (id INTEGER PRIMARY KEY AUTOINCREMENT, level INTEGER NOT NULL, created_at DEFAULT CURRENT_TIMESTAMP);");
+    db.run("CREATE TABLE IF NOT EXISTS `water_pumped` (id INTEGER PRIMARY KEY AUTOINCREMENT, level INTEGER NOT NULL, created_at DEFAULT CURRENT_TIMESTAMP);");
+    db.run("CREATE TABLE IF NOT EXISTS `registered_plant` (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(20) NOT NULL DEFAULT 'plant', created_at DEFAULT CURRENT_TIMESTAMP);");
     res.send("Database created...");
 });
 
 app.get("/populatedb", (req, res) => {
+    db.run("INSERT INTO `registered_plant` (name) VALUES ('hendrik');");
     db.run("INSERT INTO `water_level` (level) VALUES (800), (798), (600), (599), (598);");
-    db.run("INSERT INTO `ground_humidity` (level) VALUES (200), (199), (300), (305), (304);");
+    db.run("INSERT INTO `ground_humidity` (level, registered_plant_id) VALUES (200, 1), (199, 1), (300, 1), (305, 1), (304, 1);");
     db.run("INSERT INTO `water_pumped` (level) VALUES (0), (0), (1), (0), (0);");
     res.send("Database populated...");
-})
-
-app.get("/api/stats/waterlevel", (req, res) => {
-    const sql = "SELECT * FROM `water_level` LIMIT " + limit;
-    db.all(sql, (err, result) => {
-        if(err) throw err;
-        res.send(result);
-    });
-});
-
-app.get("/api/stats/groundhumidity", (req, res) => {
-    const sql = "SELECT * FROM `ground_humidity` LIMIT " + limit;
-    db.all(sql, (err, result) => {
-        if(err) throw err;
-        res.send(result);
-    });
-});
-
-app.get("/api/stats/waterpumped", (req, res) => {
-    const sql = "SELECT * FROM `water_pumped` LIMIT " + limit;
-    db.all(sql, (err, result) => {
-        if(err) throw err;
-        res.send(result);
-    });
-});
-
-// ======= POST REQUESTS =======
-app.post("/api/stats/waterlevel", (req, res) => {
-    if (!req.body || !req.body.level) {
-        res.status(401).send("No values provided");
-        return;
-    }
-
-    const sql = "INSERT INTO `water_level` (level) VALUES (?);";
-    db.run(sql, [req.body.level], (err, result) => {
-        if(err) throw err;
-        res.send(result);
-    });
-});
-
-app.post("/api/stats/groundhumidity", (req, res) => {
-    if (!req.body || !req.body.level) {
-        res.status(401).send("No values provided");
-        return;
-    }
-
-    const sql = "INSERT INTO `ground_humidity` (level) VALUES (?);";
-    db.run(sql, [req.body.level], (err, result) => {
-        if(err) throw err;
-        res.send(result);
-    });
-});
-
-app.post("/api/stats/waterpumped", (req, res) => {
-    if (!req.body || !req.body.level) {
-        res.status(401).send("No values provided");
-        return;
-    }
-
-    const sql = "INSERT INTO `water_pumped` (level) VALUES (?);";
-    db.run(sql, [req.body.level], (err, result) => {
-        if(err) throw err;
-        res.send(result);
-    });
 });
 
 // ================================================ IMPORTS =============
