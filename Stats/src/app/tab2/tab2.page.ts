@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonInput } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
+import { Component } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { IpSettingModalComponent } from '../ip-setting-modal/ip-setting-modal.component';
 
 @Component({
   selector: 'app-tab2',
@@ -9,9 +9,13 @@ import { Storage } from '@ionic/storage';
 })
 export class Tab2Page {
 
-  @ViewChild('ipInput') ipAddress!: IonInput;
-  constructor(private storage: Storage) { }
+  constructor(private modalController: ModalController) { }
 
-  async ionViewWillEnter() { this.ipAddress.value = await this.storage.get("ip"); }
-  async setLocalIp() { await this.storage.set("ip", this.ipAddress.value); }
+  async presentSettingsModal() {
+    const modal = await this.modalController.create({
+      component: IpSettingModalComponent,
+      cssClass: 'app.component'
+    });
+    return await modal.present();
+  }
 }
