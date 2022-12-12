@@ -1,0 +1,16 @@
+<ion-toolbar>
+  <ion-grid>
+    <ion-row>
+      <ion-title size="large">Ip setting</ion-title>
+      <ion-icon size="large" class="pointer mr-15" name="close-outline" (click)="dismissModal()"></ion-icon>
+    </ion-row>
+  </ion-grid>
+</ion-toolbar>
+
+<ion-text color="medium">Deze geheime modal was gebruikt om te kunnen verbinden met de server, omdat we mobiele hotspot gebruikte zou het IP-adres regelmatig veranderen</ion-text>
+
+<ion-item>
+  <ion-label>Ip Address</ion-label>
+  <ion-input #ipInput></ion-input>
+  <ion-button (click)="setLocalIp()">Save</ion-button>
+</ion-item>

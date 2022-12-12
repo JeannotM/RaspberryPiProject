@@ -1,0 +1,9 @@
+- Programmeertalen in het algemeen:
+    - Geschreven code moet functioneel en getest zijn voordat ze geüpload mogen worden.
+    - Geschreven code moet onderbouwd worden doormiddel van comments als de code te complex is om te begrijpen op zichzelf.
+- Python conventies:
+    - Functies, bestandsnamen en variabelen zijn geschreven in snake_case.
+    - Constante variabelen zijn geschreven in SCREAMING_SNAKE_CASE
+    - Classes zijn geschreven in PascalCase.
+- JavaScript conventies:
+    - Variabelen en functies zijn geschreven in camelCase
