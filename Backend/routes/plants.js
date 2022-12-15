@@ -4,7 +4,7 @@ const db = require("../database/database");
 const limit = 20;
 
 router.get("/", (req, res) => {
-    const sql = "SELECT * FROM `registered_plants` LIMIT " + limit;
+    const sql = "SELECT * FROM `registered_plant` LIMIT " + limit;
     db.all(sql, (err, result) => {
         if(err) throw err;
         res.send(result);
@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-    const sql = "INSERT INTO `registered_plants` (name) VALUES (?);"
+    const sql = "INSERT INTO `registered_plant` (name) VALUES (?);"
 
     if (!req.body || !req.body.name) {
         res.status(400).send("No name provided")
@@ -36,7 +36,7 @@ router.post("/", (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
-    const sql = "UPDATE `registered_plants` SET name = ? WHERE id = ?" + limit;
+    const sql = "UPDATE `registered_plant` SET name = ? WHERE id = ?" + limit;
 
     if (!req.body || !req.body.name) {
         res.status(400).send("No name provided");
@@ -68,3 +68,5 @@ router.put("/:id", (req, res) => {
         res.send(result);
     });
 });
+
+module.exports = router;

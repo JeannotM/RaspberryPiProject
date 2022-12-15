@@ -7,21 +7,27 @@
 </ion-content>
 
 <ion-grid>
-  <ion-row>
-    <ion-col>
-      <ion-item>
-        <ion-icon size="2" name="leaf" color="success"></ion-icon>
-        <ion-title size="8">Plant</ion-title>
-        <ion-icon name="arrow-forward-circle" (click)="presentPlantModal()" class="light pointer"></ion-icon>
-      </ion-item>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <ion-item color="light">
-        <ion-title size="10">Voeg nieuwe plant toe</ion-title>
-        <ion-icon name="add-circle" class="pointer"></ion-icon>
-      </ion-item>
-    </ion-col>
-  </ion-row>
+  <ng-template [ngIf]="registeredPlants.length !== 0">
+    <ng-template ngFor let-plant [ngForOf]="registeredPlants">
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-icon size="2" name="leaf" color="success"></ion-icon>
+            <ion-title size="8">{{ plant['name'] }}</ion-title>
+            <ion-icon name="arrow-forward-circle" (click)="presentPlantModal(plant)"class="light pointer"></ion-icon>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ng-template>
+  </ng-template>
+  <ng-template [ngIf]="registeredPlants.length !== 2">
+    <ion-row>
+      <ion-col>
+        <ion-item color="light">
+          <ion-title size="10">Voeg nieuwe plant toe</ion-title>
+          <ion-icon name="add-circle" class="pointer" (click)="addNewPlant()"></ion-icon>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ng-template>
 </ion-grid>

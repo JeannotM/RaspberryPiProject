@@ -77,3 +77,5 @@ router.post("/waterpumped", (req, res) => {
         res.send(result);
     });
 });
+
+module.exports = router;

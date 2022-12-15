@@ -6,7 +6,7 @@ def insert_water_level(arg: int):
     requests.post(url + "waterlevel", json={"level": arg})
     
 def insert_ground_humidity(arg: int):
-    requests.post(url + "groundhumidity", json={"level": arg})
+    requests.post(url + "groundhumidity/1", json={"level": arg})
     
 def insert_water_pumped(arg: int):
     requests.post(url + "waterpumped", json={"level": arg})

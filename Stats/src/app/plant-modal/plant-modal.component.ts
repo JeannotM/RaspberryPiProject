@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { ModalController, NavParams } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Chart, ChartConfiguration } from 'chart.js/auto';
 import { environment } from 'src/environments/environment';
@@ -10,10 +10,14 @@ import { environment } from 'src/environments/environment';
   templateUrl: './plant-modal.component.html',
   styleUrls: ['./plant-modal.component.scss'],
 })
-export class PlantModalComponent {
+export class PlantModalComponent implements OnInit {
+
+  private months = ["Jan", "Feb", "Maa", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"]
 
   @ViewChild("groundHumidityCanvas") public groundHumidityCanvas!: ElementRef;
   private groundHumidityChart?: Chart;
+
+  public plant: any = {};
 
   public groundHumidityChartConfiguration: ChartConfiguration = {
     type: "line", data: {
@@ -27,7 +31,7 @@ export class PlantModalComponent {
         pointHoverBackgroundColor: '#fff',
         pointHoverBorderColor: 'rgba(148,159,177,0.8)',
         fill: 'origin',
-      }], labels: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July' ]
+      }], labels: []
     },
     options: {
       elements: { line: { tension: 0.5 } },
@@ -40,17 +44,29 @@ export class PlantModalComponent {
         }
       }, plugins: { legend: { display: true } } } }
 
-  constructor(private http: HttpClient, private storage: Storage, private modalController: ModalController) { }
+  constructor(private http: HttpClient, private storage: Storage, private modalController: ModalController, private navParams: NavParams) { }
+  async ngOnInit() {
+    this.plant = this.navParams.get("plant");
+    this.renderChart();
+  }
 
   dismissModal() { this.modalController.dismiss(); }
-  async ionViewWillEnter() { this.renderChart(); }
+  formatDate(date: Date) { return date.getDate() + " " + this.months[date.getMonth()] + " " + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes(); }
+
   async renderChart() {
     if (!this.groundHumidityChart) {
-      this.http.get(environment.groundhumidity.replace("ipAddress", (await this.storage.get("ip")))).subscribe((result: any) => {
+      this.http.get(environment.groundhumidity.replace("ipAddress", (await this.storage.get("ip"))) + "/" + this.plant['id']).subscribe((result: any) => {
         let values = []
-        for(let index in result) values.push(result[index].level)
+        let timeStamps = []
+        let i = 0;
+        for(let index in result) {
+          if(i++ > 10) break;
+          values.push(result[index].level);
+          timeStamps.push(this.formatDate(new Date(result[index].created_at)));
+        }
 
         this.groundHumidityChartConfiguration.data.datasets[0].data = values;
+        this.groundHumidityChartConfiguration.data.labels = timeStamps;
         this.groundHumidityChart = new Chart(this.groundHumidityCanvas.nativeElement, this.groundHumidityChartConfiguration);
       });
     }
