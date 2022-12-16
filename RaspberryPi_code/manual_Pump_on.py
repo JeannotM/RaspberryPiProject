@@ -30,7 +30,5 @@ def pump_on(pump_pin = 26, delay = 1):
     time.sleep(1)
     GPIO.output(pump_pin, GPIO.LOW)
 
-
-
 if __name__ == '__main__':
     pump_on()
