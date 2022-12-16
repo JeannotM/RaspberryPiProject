@@ -1,32 +1,24 @@
-from datetime import datetime, timedelta
+from config import SLEEP_TIMER, WATER_TANK_EMPTY, insert_water_pumped, insert_ground_humidity, insert_water_level
+from moisture_sensor import get_moisture_level
+from distance_meter import get_distance
+from pump import activate_pump
+from datetime import datetime
 from time import sleep
-import requests
-
-SLEEP_TIMER = timedelta(seconds=15)
-url = "http://localhost:3000/api/stats/"
-
-def insert_water_level(arg: int):
-    requests.post(url + "waterlevel", json={"level": arg})
-    
-def insert_ground_humidity(arg: int):
-    requests.post(url + "groundhumidity/1", json={"level": arg})
-    
-def insert_water_pumped(arg: int):
-    requests.post(url + "waterpumped", json={"level": arg})
 
 def start():
     while True:
         time_started = datetime.now()
-        # insert_water_pumped(0)
 
-        # plant = get_plant()
-        # if plant is wet:
+        if get_moisture_level() > 2000 and get_distance() < WATER_TANK_EMPTY:
+            insert_water_pumped(1)
+            activate_pump()
+        else:
+            insert_water_pumped(0)
 
-        # water_level
-        # insert_water_level(water_level)
+        insert_ground_humidity(get_moisture_level())
+        insert_water_level(get_distance())
 
-        sleep(SLEEP_TIMER - (datetime.now() - time_started)) # Make sure to print interval equally
-
+        sleep(SLEEP_TIMER - (datetime.now() - time_started)) # Make sure to do loop interval equally
 
 if __name__ == '__main__':
     start()
