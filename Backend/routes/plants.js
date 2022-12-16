@@ -69,4 +69,23 @@ router.put("/:id", (req, res) => {
     });
 });
 
+router.delete("/:id", (req, res) => {
+    const sql = "DELETE FROM `registered_plant` WHERE id = ?";
+
+    try {
+        const id = parseInt(req.params.id);
+        const idFloat = parseFloat(req.params.id);
+        if (id < 1) throw new Error("Number needs to be positive integer");
+        if (id != idFloat) throw new Error("Number needs to be integer");
+    } catch (error) {
+        res.status(400).send("Invalid id provided");
+        return;
+    }
+
+    db.run(sql, [req.params.id], (err, result) => {
+        if(err) throw err;
+        res.send(result);
+    });
+});
+
 module.exports = router;

@@ -17,7 +17,9 @@ export class PlantModalComponent implements OnInit {
   @ViewChild("groundHumidityCanvas") public groundHumidityCanvas!: ElementRef;
   private groundHumidityChart?: Chart;
 
-  public plant: any = {};
+  public registeredPlants: any = {};
+  public plantIndex: number = -1;
+  public plantName: string = "";
 
   public groundHumidityChartConfiguration: ChartConfiguration = {
     type: "line", data: {
@@ -44,9 +46,14 @@ export class PlantModalComponent implements OnInit {
         }
       }, plugins: { legend: { display: true } } } }
 
-  constructor(private http: HttpClient, private storage: Storage, private modalController: ModalController, private navParams: NavParams) { }
+  constructor(private http: HttpClient, private storage: Storage, private modalController: ModalController, private navParams: NavParams) { 
+    
+  }
+
   async ngOnInit() {
-    this.plant = this.navParams.get("plant");
+    this.plantIndex = parseInt(await this.navParams.get("index"));
+    this.registeredPlants = await this.navParams.get("registeredPlants");
+    this.plantName = this.registeredPlants[this.plantIndex]['name'];
     this.renderChart();
   }
 
@@ -55,7 +62,7 @@ export class PlantModalComponent implements OnInit {
 
   async renderChart() {
     if (!this.groundHumidityChart) {
-      this.http.get(environment.groundhumidity.replace("ipAddress", (await this.storage.get("ip"))) + "/" + this.plant['id']).subscribe((result: any) => {
+      this.http.get(environment.groundhumidity.replace("ipAddress", (await this.storage.get("ip"))) + "/" + this.registeredPlants[this.plantIndex]['id']).subscribe((result: any) => {
         let values = []
         let timeStamps = []
         let i = 0;
@@ -70,5 +77,14 @@ export class PlantModalComponent implements OnInit {
         this.groundHumidityChart = new Chart(this.groundHumidityCanvas.nativeElement, this.groundHumidityChartConfiguration);
       });
     }
+  }
+
+  async removePlant() {
+    this.http.delete(environment.plants.replace("ipAddress", (await this.storage.get("ip"))) + "/" + this.registeredPlants[this.plantIndex]['id']).subscribe((result: any) => {
+      if (this.plantIndex == 0) {
+        this.registeredPlants.shift();
+      } else this.registeredPlants.pop();
+      this.dismissModal();
+    });
   }
 }

@@ -40,7 +40,7 @@ export class Tab3Page {
     const modal = await this.modalController.create({
       component: PlantModalComponent,
       cssClass: 'update-modal-height',
-      componentProps: { plant: clickedPlant }
+      componentProps: { index: clickedPlant, registeredPlants: this.registeredPlants }
     });
     return await modal.present();
   }
