@@ -9,7 +9,7 @@ TRIG = 21  #altra sonic GPIO
 ECHO = 20
 ALARM = 23  #alarm die komt nog
 #stel de tank lengte is 100
-TANK_VOEL = 14
+TANK_VOEL = 9.5
 TANK_LAAG = 2
 
 GPIO.setwarnings(False)
@@ -48,6 +48,9 @@ def get_distance():
 
 			distance = round(distance, 3)
 			print (x, "distance: ", distance)
+
+
+			return distance
 		
 			dist_add = dist_add + distance
 			#print "dist_add: ", dist_add
