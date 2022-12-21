@@ -18,7 +18,7 @@ def start():
         insert_ground_humidity(get_moisture_level())
         insert_water_level(get_distance())
 
-        sleep(SLEEP_TIMER - (datetime.now() - time_started)) # Make sure to do loop interval equally
+        sleep(SLEEP_TIMER.total_seconds() - (datetime.now() - time_started).total_seconds()) # Make sure to do loop interval equally
 
 if __name__ == '__main__':
     start()

@@ -17,8 +17,8 @@ def get_status(pin = 12):
     return GPIO.input(pin) 
 
 def init_output(pin):
-    GPIO.setup(pin, GPIO.OUT)
-    GPIO.setup(pin,GPIO.LOW)
+    GPIO.setup(WATER_PUMP_PIN, GPIO.OUT)
+    GPIO.setup(WATER_PUMP_PIN, GPIO.LOW)
 
 
 def pump_on(pump_pin = 26, delay = 1):
